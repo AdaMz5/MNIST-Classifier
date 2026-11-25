@@ -3,6 +3,5 @@ torch
 torchvision
 # Pomocne vizualizacne skripty
 matplotlib
-# Spracovanie kresby v Tkinter GUI (Image.Resampling)
+
 Pillow>=9.1
-# Tkinter sa instaluje spolu s Pythonom alebo cez systemovy spravca balikov.
