@@ -29,20 +29,15 @@ súčasť Pythonu a neinštaluje sa cez pip.
 
 ## Spustenie
 
-Príkazy spúšťaj z koreňového priečinka projektu:
+Tréning spustíš v priečinku projektu príkazom:
 
 ```bash
-python -c "from pathlib import Path; Path('model').mkdir(exist_ok=True)"
 python main.py
 ```
 
-Pri prvom spustení sa MNIST stiahne do `data/`, preto je potrebné pripojenie
-na internet. Program natrénuje model, vypíše priemernú stratu po každej epoche
-a presnosť na testovacích dátach. Potom uloží váhy do `model/mnist_model.pth`
-a načíta ich do novej inštancie modelu v režime vyhodnocovania.
-
-Každé spustenie trénuje nový model a prepíše uložené váhy. Aktuálny kód
-počíta na CPU.
+Program natrénuje model, vypíše jeho presnosť a uloží ho do
+`model/mnist_model.pth`. Pri prvom spustení potrebuje internet na stiahnutie
+datasetu MNIST. Opätovné spustenie prepíše uložený model.
 
 ## Grafické rozhranie (Tkinter)
 
