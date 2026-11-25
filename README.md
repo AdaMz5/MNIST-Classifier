@@ -24,7 +24,8 @@ Vo Windows PowerShell namiesto `source` použi:
 
 Súbor `requirements.txt` obsahuje `torch` a `torchvision` na tréning
 a načítanie datasetu a `matplotlib` na vykresľovanie obrázkov v pomocných
-skriptoch.
+skriptoch. `Pillow` zabezpečuje spracovanie kresby v GUI. Tkinter je systémová
+súčasť Pythonu a neinštaluje sa cez pip.
 
 ## Spustenie
 
@@ -45,10 +46,22 @@ počíta na CPU.
 
 ## Grafické rozhranie (Tkinter)
 
-Na rozpoznávanie vlastných číslic pomocou uloženého modelu spusti:
+Grafické rozhranie je vo vetve `gui`. Z koreňového priečinka repozitára
+prepni vetvu a nainštaluj závislosti:
 
 ```bash
+git switch gui
 source .venv/bin/activate
+python -m pip install -r requirements.txt
+```
+
+Pred spustením potrebuješ natrénované váhy `model/mnist_model.pth`.
+Váhy nie sú súčasťou Git repozitára. Ak ich už máš, vlož ich na túto cestu.
+Ak ich nemáš, vytvor ich tréningom podľa sekcie **Spustenie** vyššie.
+
+Potom otvor GUI:
+
+```bash
 python gui.py
 ```
 
@@ -65,6 +78,16 @@ Vyžaduje Pillow (súčasť `requirements.txt`) a Tkinter. Ak Python hlási chý
 modul `tkinter`, doinštaluj systémový balík pre svoju verziu Pythonu
 (napríklad `python3-tk` na Ubuntu/Debiane alebo `python3-tkinter` na Fedore).
 Okno potrebuje grafické prostredie.
+
+Ak po aktivácii prostredia chýba `torch`, skontroluj použitý interpreter:
+
+```bash
+python -c "import sys; print(sys.executable)"
+```
+
+Cesta má smerovať na `.venv/bin/python` v aktuálnom projekte
+(na Windows `.venv\Scripts\python.exe`). Po presunutí alebo premenovaní
+projektu vytvor virtuálne prostredie nanovo a opäť nainštaluj závislosti.
 
 ## Model a tréning
 
