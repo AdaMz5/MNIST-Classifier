@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import torch
 
 from train import data_load, train
@@ -14,6 +16,7 @@ vyhodnotenie = evaluate(model, test_loader)
 print(vyhodnotenie)
 
 # Save the model
+Path('model').mkdir(exist_ok=True)
 torch.save(model.state_dict(), './model/mnist_model.pth')
 
 # Load the model
