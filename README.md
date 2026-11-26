@@ -3,52 +3,103 @@
 Jednoduchá neurónová sieť v PyTorch na rozpoznávanie ručne písaných číslic
 0–9 z datasetu MNIST. Vstupom sú obrázky s rozmermi 28 × 28 pixelov.
 
-## Inštalácia
+## Inštalácia a spustenie
 
 Projekt vyžaduje Python 3.10 alebo novší a verziu Pythonu podporovanú
 nainštalovanými balíkmi PyTorch a torchvision.
 
-V priečinku projektu vytvor a aktivuj virtuálne prostredie:
+V termináli otvor koreňový priečinok projektu (ten, ktorý obsahuje `main.py`
+a `requirements.txt`). Všetky nasledujúce príkazy spúšťaj v tomto priečinku.
+
+### Linux
+
+Pri prvom použití vytvor virtuálne prostredie a nainštaluj závislosti:
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-Vo Windows PowerShell namiesto `source` použi:
+Pred tréningom vytvor priečinok na uloženie modelu a spusti program:
+
+```bash
+mkdir -p model
+python main.py
+```
+
+Ak si vo vetve `gui` a už máš natrénovaný model, grafické rozhranie spustíš:
+
+```bash
+python gui.py
+```
+
+Pri ďalšom otvorení terminálu stačí aktivovať prostredie pomocou
+`source .venv/bin/activate` a spustiť `python main.py` alebo `python gui.py`.
+
+### Windows (PowerShell)
+
+Pri prvom použití vytvor virtuálne prostredie a nainštaluj závislosti:
 
 ```powershell
-.venv\Scripts\Activate.ps1
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
+
+Pred tréningom vytvor priečinok na uloženie modelu a spusti program:
+
+```powershell
+mkdir model
+python main.py
+```
+
+Ak si vo vetve `gui` a už máš natrénovaný model, grafické rozhranie spustíš:
+
+```powershell
+python gui.py
+```
+
+Pri ďalšom otvorení PowerShellu stačí aktivovať prostredie pomocou
+`.\.venv\Scripts\Activate.ps1` a spustiť `python main.py` alebo `python gui.py`.
+Ak Windows nerozpozná príkaz `python`, na vytvorenie prostredia skús
+`py -m venv .venv`. Po aktivácii používaj `python`.
 
 Súbor `requirements.txt` obsahuje `torch` a `torchvision` na tréning
 a načítanie datasetu a `matplotlib` na vykresľovanie obrázkov v pomocných
 skriptoch.
 
-## Spustenie
+## Dáta a ukladanie modelu
 
-Príkazy spúšťaj z koreňového priečinka projektu:
+- `data/` nemusíš vytvárať ručne. Pri prvom spustení `python main.py` ho
+  knižnica torchvision vytvorí a stiahne doň MNIST. Na prvé stiahnutie je
+  potrebný internet; pri ďalších spusteniach sa použijú existujúce dáta.
+- `model/` musíš v aktuálnej verzii vytvoriť pred tréningom príkazom uvedeným
+  vyššie. Program tento priečinok automaticky nevytvára a bez neho uloženie
+  po tréningu zlyhá.
+- Súbor `model/mnist_model.pth` nemusíš vytvárať ručne. Po tréningu ho
+  `torch.save(model.state_dict(), ...)` vytvorí a uloží doň naučené váhy modelu.
+  Architektúra siete zostáva definovaná v `model.py`.
 
-```bash
-python -c "from pathlib import Path; Path('model').mkdir(exist_ok=True)"
-python main.py
-```
-
-Pri prvom spustení sa MNIST stiahne do `data/`, preto je potrebné pripojenie
-na internet. Program natrénuje model, vypíše priemernú stratu po každej epoche
+Program `main.py` natrénuje model, vypíše priemernú stratu po každej epoche
 a presnosť na testovacích dátach. Potom uloží váhy do `model/mnist_model.pth`
 a načíta ich do novej inštancie modelu v režime vyhodnocovania.
 
-Každé spustenie trénuje nový model a prepíše uložené váhy. Aktuálny kód
-počíta na CPU.
+Každé spustenie `python main.py` trénuje nový model a prepíše uložené váhy;
+nepokračuje v predchádzajúcom tréningu. Cesty `data/` a `model/` sa pri tréningu
+vyhodnocujú voči aktuálnemu priečinku terminálu, preto ho spúšťaj z koreňa projektu.
+Aktuálny kód počíta na CPU.
+
+`python gui.py` potrebuje už existujúci súbor `model/mnist_model.pth`, ale
+nepotrebuje priečinok `data/`. Ak váhy ešte nemáš, najprv vytvor `model/`
+a spusti `python main.py`.
 
 ## Grafické rozhranie (Tkinter)
 
-Na rozpoznávanie vlastných číslic pomocou uloženého modelu spusti:
+Vo vetve `gui` po aktivácii virtuálneho prostredia podľa svojho systému spusti
+v termináli v priečinku projektu:
 
 ```bash
-source .venv/bin/activate
 python gui.py
 ```
 
@@ -80,16 +131,16 @@ Veľkosť dávky a learning rate sú nastavené v `train.py`.
 
 ## Súbory projektu
 
-| Súbor | Úloha |
-| --- | --- |
-| `main.py` | Spustenie tréningu, vyhodnotenie, uloženie a načítanie váh. |
-| `model.py` | Definícia triedy `MNISTClassifier`. |
-| `gui.py` | Tkinter plátno a rozpoznávanie číslic uloženým modelom. |
-| `train.py` | Načítanie dát, transformácie a tréningová slučka. |
-| `evaluate.py` | Výpočet presnosti na testovacej množine. |
-| `requirements.txt` | Závislosti projektu na inštaláciu cez pip. |
-| `dataset.py` | Rozpracovaný pomocný skript na načítanie dát. |
-| `main_notes.py` | Rozpracované poznámky a vizualizácia obrázkov. |
+| Súbor              | Úloha                                                       |
+| ------------------ | ----------------------------------------------------------- |
+| `main.py`          | Spustenie tréningu, vyhodnotenie, uloženie a načítanie váh. |
+| `model.py`         | Definícia triedy `MNISTClassifier`.                         |
+| `gui.py`           | Tkinter plátno a rozpoznávanie číslic uloženým modelom.     |
+| `train.py`         | Načítanie dát, transformácie a tréningová slučka.           |
+| `evaluate.py`      | Výpočet presnosti na testovacej množine.                    |
+| `requirements.txt` | Závislosti projektu na inštaláciu cez pip.                  |
+| `dataset.py`       | Rozpracovaný pomocný skript na načítanie dát.               |
+| `main_notes.py`    | Rozpracované poznámky a vizualizácia obrázkov.              |
 
 `main_notes.py` zatiaľ nie je spustiteľný: importuje `load_datasets`, ktorá
 v `dataset.py` nie je definovaná. Hlavný program tieto pomocné súbory nepoužíva.
