@@ -1,60 +1,103 @@
 # MNIST Classifier
 
 Jednoduchá neurónová sieť v PyTorch na rozpoznávanie ručne písaných číslic
-0–9 z datasetu MNIST. Vstupom sú obrázky s rozmermi 28 × 28 pixelov. **Úspešnosť modelu je: 97.93%**
+0–9 z datasetu MNIST. Vstupom sú obrázky s rozmermi 28 × 28 pixelov.
 
-## Inštalácia
+## Inštalácia a spustenie
 
 Projekt vyžaduje Python 3.10 alebo novší a verziu Pythonu podporovanú
 nainštalovanými balíkmi PyTorch a torchvision.
 
-V priečinku projektu vytvor a aktivuj virtuálne prostredie:
+V termináli otvor koreňový priečinok projektu (ten, ktorý obsahuje `main.py`
+a `requirements.txt`). Všetky nasledujúce príkazy spúšťaj v tomto priečinku.
+
+### Linux
+
+Pri prvom použití vytvor virtuálne prostredie a nainštaluj závislosti:
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-Vo Windows PowerShell namiesto `source` použi:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-Súbor `requirements.txt` obsahuje `torch` a `torchvision` na tréning
-a načítanie datasetu a `matplotlib` na vykresľovanie obrázkov v pomocných
-skriptoch. `Pillow` zabezpečuje spracovanie kresby v GUI. Tkinter je systémová
-súčasť Pythonu a neinštaluje sa cez pip.
-
-## Spustenie
-
-Tréning spustíš v priečinku projektu príkazom:
+Pred tréningom vytvor priečinok na uloženie modelu a spusti program:
 
 ```bash
+mkdir -p model
 python main.py
 ```
 
-Program natrénuje model, vypíše jeho presnosť a uloží ho do
-`model/mnist_model.pth`. Pri prvom spustení potrebuje internet na stiahnutie
-datasetu MNIST. Opätovné spustenie prepíše uložený model.
-
-## Grafické rozhranie (Tkinter)
-
-Grafické rozhranie je vo vetve `gui`. Z koreňového priečinka repozitára
-prepni vetvu a nainštaluj závislosti:
+Ak si vo vetve `gui` a už máš natrénovaný model, grafické rozhranie spustíš:
 
 ```bash
-git switch gui
-source .venv/bin/activate
+python gui.py
+```
+
+Pri ďalšom otvorení terminálu stačí aktivovať prostredie pomocou
+`source .venv/bin/activate` a spustiť `python main.py` alebo `python gui.py`.
+
+### Windows (PowerShell)
+
+Pri prvom použití vytvor virtuálne prostredie a nainštaluj závislosti:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 ```
 
-Pred spustením potrebuješ natrénované váhy `model/mnist_model.pth`.
-Váhy nie sú súčasťou Git repozitára. Ak ich už máš, vlož ich na túto cestu.
-Ak ich nemáš, vytvor ich tréningom podľa sekcie **Spustenie** vyššie.
+Pred tréningom vytvor priečinok na uloženie modelu a spusti program:
 
-Potom otvor GUI:
+```powershell
+mkdir model
+python main.py
+```
+
+Ak si vo vetve `gui` a už máš natrénovaný model, grafické rozhranie spustíš:
+
+```powershell
+python gui.py
+```
+
+Pri ďalšom otvorení PowerShellu stačí aktivovať prostredie pomocou
+`.\.venv\Scripts\Activate.ps1` a spustiť `python main.py` alebo `python gui.py`.
+Ak Windows nerozpozná príkaz `python`, na vytvorenie prostredia skús
+`py -m venv .venv`. Po aktivácii používaj `python`.
+
+Súbor `requirements.txt` obsahuje `torch` a `torchvision` na tréning
+a načítanie datasetu a `matplotlib` na vykresľovanie obrázkov v pomocných
+skriptoch.
+
+## Dáta a ukladanie modelu
+
+- `data/` nemusíš vytvárať ručne. Pri prvom spustení `python main.py` ho
+  knižnica torchvision vytvorí a stiahne doň MNIST. Na prvé stiahnutie je
+  potrebný internet; pri ďalších spusteniach sa použijú existujúce dáta.
+- `model/` musíš v aktuálnej verzii vytvoriť pred tréningom príkazom uvedeným
+  vyššie. Program tento priečinok automaticky nevytvára a bez neho uloženie
+  po tréningu zlyhá.
+- Súbor `model/mnist_model.pth` nemusíš vytvárať ručne. Po tréningu ho
+  `torch.save(model.state_dict(), ...)` vytvorí a uloží doň naučené váhy modelu.
+  Architektúra siete zostáva definovaná v `model.py`.
+
+Program `main.py` natrénuje model, vypíše priemernú stratu po každej epoche
+a presnosť na testovacích dátach. Potom uloží váhy do `model/mnist_model.pth`
+a načíta ich do novej inštancie modelu v režime vyhodnocovania.
+
+Každé spustenie `python main.py` trénuje nový model a prepíše uložené váhy;
+nepokračuje v predchádzajúcom tréningu. Cesty `data/` a `model/` sa pri tréningu
+vyhodnocujú voči aktuálnemu priečinku terminálu, preto ho spúšťaj z koreňa projektu.
+Aktuálny kód počíta na CPU.
+
+`python gui.py` potrebuje už existujúci súbor `model/mnist_model.pth`, ale
+nepotrebuje priečinok `data/`. Ak váhy ešte nemáš, najprv vytvor `model/`
+a spusti `python main.py`.
+
+## Grafické rozhranie (Tkinter)
+
+Vo vetve `gui` po aktivácii virtuálneho prostredia podľa svojho systému spusti
+v termináli v priečinku projektu:
 
 ```bash
 python gui.py
@@ -73,16 +116,6 @@ Vyžaduje Pillow (súčasť `requirements.txt`) a Tkinter. Ak Python hlási chý
 modul `tkinter`, doinštaluj systémový balík pre svoju verziu Pythonu
 (napríklad `python3-tk` na Ubuntu/Debiane alebo `python3-tkinter` na Fedore).
 Okno potrebuje grafické prostredie.
-
-Ak po aktivácii prostredia chýba `torch`, skontroluj použitý interpreter:
-
-```bash
-python -c "import sys; print(sys.executable)"
-```
-
-Cesta má smerovať na `.venv/bin/python` v aktuálnom projekte
-(na Windows `.venv\Scripts\python.exe`). Po presunutí alebo premenovaní
-projektu vytvor virtuálne prostredie nanovo a opäť nainštaluj závislosti.
 
 ## Model a tréning
 
