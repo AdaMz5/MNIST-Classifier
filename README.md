@@ -1,9 +1,7 @@
 # MNIST Classifier
 
-**Accuracy of test set: 97.93%**
-
 Jednoduchá neurónová sieť v PyTorch na rozpoznávanie ručne písaných číslic
-0–9 z datasetu MNIST. Vstupom sú obrázky s rozmermi 28 × 28 pixelov.
+0–9 z datasetu MNIST. Vstupom sú obrázky s rozmermi 28 × 28 pixelov. **Úspešnosť modelu je: 97.93%**
 
 ## Inštalácia
 
@@ -100,16 +98,16 @@ Veľkosť dávky a learning rate sú nastavené v `train.py`.
 
 ## Súbory projektu
 
-| Súbor | Úloha |
-| --- | --- |
-| `main.py` | Spustenie tréningu, vyhodnotenie, uloženie a načítanie váh. |
-| `model.py` | Definícia triedy `MNISTClassifier`. |
-| `gui.py` | Tkinter plátno a rozpoznávanie číslic uloženým modelom. |
-| `train.py` | Načítanie dát, transformácie a tréningová slučka. |
-| `evaluate.py` | Výpočet presnosti na testovacej množine. |
-| `requirements.txt` | Závislosti projektu na inštaláciu cez pip. |
-| `dataset.py` | Rozpracovaný pomocný skript na načítanie dát. |
-| `main_notes.py` | Rozpracované poznámky a vizualizácia obrázkov. |
+| Súbor              | Úloha                                                       |
+| ------------------ | ----------------------------------------------------------- |
+| `main.py`          | Spustenie tréningu, vyhodnotenie, uloženie a načítanie váh. |
+| `model.py`         | Definícia triedy `MNISTClassifier`.                         |
+| `gui.py`           | Tkinter plátno a rozpoznávanie číslic uloženým modelom.     |
+| `train.py`         | Načítanie dát, transformácie a tréningová slučka.           |
+| `evaluate.py`      | Výpočet presnosti na testovacej množine.                    |
+| `requirements.txt` | Závislosti projektu na inštaláciu cez pip.                  |
+| `dataset.py`       | Rozpracovaný pomocný skript na načítanie dát.               |
+| `main_notes.py`    | Rozpracované poznámky a vizualizácia obrázkov.              |
 
 `main_notes.py` zatiaľ nie je spustiteľný: importuje `load_datasets`, ktorá
 v `dataset.py` nie je definovaná. Hlavný program tieto pomocné súbory nepoužíva.
