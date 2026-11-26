@@ -1,5 +1,7 @@
 # MNIST Classifier
 
+**Accuracy of test set: 97.93%**
+
 Jednoduchá neurónová sieť v PyTorch na rozpoznávanie ručne písaných číslic
 0–9 z datasetu MNIST. Vstupom sú obrázky s rozmermi 28 × 28 pixelov.
 
